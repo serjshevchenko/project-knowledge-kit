@@ -1,11 +1,10 @@
-# Framework principles
+# Design principles
 
-- **Source of truth:** One canonical file per concern.
-- **Bootstrap:** ChatGPT Project Instructions point to the current index; they do not duplicate all rules.
-- **Context routing:** Index → applicable rules → minimum relevant source.
-- **Lazy retrieval:** No indiscriminate project-wide reads.
-- **Current by default:** Latest dated file, old files preserved for history.
-- **Fail closed:** Stop if required rules/sources are inaccessible; no cached reconstruction.
-- **Transactional maintenance:** Update changelog/README/references with material source changes.
-- **Verification:** A generated scaffold is not an applied ChatGPT configuration.
-- **Portability:** Templates live in GitHub; installed project sources may live elsewhere.
+1. Core rules and knowledge structure are independent of the AI vendor and storage provider.
+2. Platform adapters deliver bootstrap rules through the target runtime's supported mechanism.
+3. Storage providers only publish canonical sources; they do not dictate agent behavior.
+4. Navigation first; retrieval second. Read only relevant current sources.
+5. One canonical document per concern; dated history is retained.
+6. Fail closed on mandatory inaccessible rules or context; never reconstruct from stale copies.
+7. Changes include source, references, indexes and changelog with write verification.
+8. Installation status reflects observable results; generating a bootstrap does not imply it was applied.
