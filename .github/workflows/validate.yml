@@ -1,0 +1,18 @@
+name: Validate Knowledge Kit
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile scripts
+        run: python -m compileall -q scripts tests
+      - name: Test scaffold and validation
+        run: python -m unittest discover -s tests -v
