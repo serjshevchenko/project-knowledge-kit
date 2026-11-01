@@ -1,31 +1,38 @@
 ---
 name: project-knowledge-installer
-description: Scaffold, configure, validate and upgrade an AI Project Knowledge Kit, including ChatGPT Project Instructions and lazy project context routing.
+description: Initialize, configure, validate and upgrade provider-neutral AI project knowledge with platform and storage adapters.
 ---
 
 # Project Knowledge Installer
 
-Use the version-controlled `templates/project/` files as source of truth, not memory.
+Use the version-controlled `core/templates/project/` and `platforms/` in this repository, not recollection.
+
+## Independent dimensions
+
+**AI platform** selects how the agent receives bootstrap instructions: OpenAI ChatGPT Project, OpenAI Codex, Anthropic Claude Project, Anthropic Claude Code, Google Gemini app, or Google Gemini CLI.
+
+**Storage provider** selects where canonical project files are published: GitHub, Google Drive, local, or other. Never conflate AI runtime with storage. The same canonical core should work across runtimes.
 
 ## Initialize
-1. Identify project name, slug, destination/provider and accessible canonical URL; do not invent values.
-2. Inspect the target first. Never overwrite existing sources without an approved migration plan.
-3. Run `python3 scripts/install.py --name ... --slug ... --output ...` or reproduce its behavior where shell access is unavailable.
-4. Publish files to the approved provider with authorized write tools; verify by re-reading.
-5. Resolve an actual accessible URL to the published `agent-rules/INDEX.md`.
-6. Replace `{{RULES_INDEX_URL}}` in generated `PROJECT_INSTRUCTIONS.md` with that URL.
 
-## Apply ChatGPT Project Instructions
-- Inspect available authorized tools to identify a supported **target ChatGPT Project settings write** action.
-- If available, apply instructions to the correct project and read them back.
-- Otherwise, return the exact rendered text and guide the user to **Project settings → Instructions**. Request user confirmation/read-back.
-- Never use undocumented private APIs, assume instructions are installed, or report success without evidence.
-- If unavailable/unconfirmed, report `INSTRUCTIONS_PENDING`.
+1. Identify project name, slug, AI platform, storage provider and destination. Never invent external URLs.
+2. Inspect destination and permissions before writes; preserve existing files.
+3. Scaffold using `python3 scripts/install.py --name ... --slug ... --platform ... --storage-provider ...` or reproduce the exact template rendering using authorized tools.
+4. Publish the generated files to the selected storage provider using available authorized APIs. Verify by read-back, not presumed success.
+5. Determine a real, accessible canonical URL for the published `agent-rules/INDEX.md`, then render the chosen platform bootstrap with it.
+6. Apply the bootstrap using the relevant `platforms/` adapter. Use a documented settings API only when available and authorized; otherwise hand over the exact rendered content and manual target instructions.
+7. Verify the target runtime loads the bootstrap and can read the canonical index and routed rules. If no read-back is possible, request explicit user confirmation and do not claim verified installation.
 
-## Validate
-Run `scripts/validate.py` to check local files. Verify live canonical links, routing, access, source version selection and actual project setting separately.
+## Storage operations
 
-Statuses: `SCAFFOLDED`, `FILES_PUBLISHED`, `INSTRUCTIONS_PENDING`, `INSTRUCTIONS_APPLIED`, `VERIFIED`. Each status needs observable evidence; never equate a local scaffold with a configured project.
+GitHub: use an authorized connector to create files/commits or a PR; do not assume direct CLI access.
+Google Drive: use authorized Drive operations to create Markdown files and folders; check actual source URLs and access.
+Local: write only if filesystem access exists; local paths are not automatically reachable by hosted agents.
+
+## Status
+
+Report independently: `SCAFFOLDED`, `FILES_PUBLISHED`, `BOOTSTRAP_PENDING`, `BOOTSTRAP_APPLIED`, `VERIFIED`. State the exact blocker if the target settings cannot be written or inspected.
 
 ## Upgrade
-Read existing sources, preserve project-specific changes, propose a diff, follow source-change/changelog rules and verify all writes. Avoid destructive copy-over upgrades.
+
+Read current project-specific sources and rules, compare against core/adapter versions, preserve local modifications, update changelog and references and verify all changes. Never silently overwrite canonical sources.
